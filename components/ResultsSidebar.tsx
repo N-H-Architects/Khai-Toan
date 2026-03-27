@@ -83,6 +83,17 @@ export const ResultsSidebar: React.FC<ResultsSidebarProps> = ({ result }) => {
                   <span className="font-mono">{formatCurrency(result.costGarden)}</span>
                 </div>
 
+                {/* Row E: Interior Finish */}
+                <div className="flex justify-between text-slate-300">
+                  <div className="flex flex-col">
+                    <span>e. Hoàn thiện Nội thất</span>
+                    {result.costInteriorFinish > 0 && (
+                      <span className="text-[10px] text-slate-500 italic">(Diện tích: {result.areaInteriorFinish} m²)</span>
+                    )}
+                  </div>
+                  <span className="font-mono text-orange-300">{formatCurrency(result.costInteriorFinish)}</span>
+                </div>
+
               </div>
             </div>
 
@@ -108,11 +119,21 @@ export const ResultsSidebar: React.FC<ResultsSidebarProps> = ({ result }) => {
                              <span className="font-mono">{formatCurrency(result.costDesignArch)}</span>
                         </div>
                         <div className="flex justify-between">
-                             <span>- Nội thất</span>
+                             <div className="flex flex-col">
+                                <span>- Nội thất</span>
+                                {result.designInteriorRatio > 0 && (
+                                    <span className="text-[10px] text-slate-500 italic">(Chiếm {result.designInteriorRatio.toFixed(2)}% chi phí xây nhà)</span>
+                                )}
+                             </div>
                              <span className="font-mono">{formatCurrency(result.costDesignInterior)}</span>
                         </div>
                         <div className="flex justify-between">
-                             <span>- Cảnh quan</span>
+                             <div className="flex flex-col">
+                                <span>- Cảnh quan</span>
+                                {result.designLandscapeRatio > 0 && (
+                                    <span className="text-[10px] text-slate-500 italic">(Chiếm {result.designLandscapeRatio.toFixed(2)}% chi phí xây nhà)</span>
+                                )}
+                             </div>
                              <span className="font-mono">{formatCurrency(result.costDesignLandscape)}</span>
                         </div>
                     </div>
@@ -125,6 +146,10 @@ export const ResultsSidebar: React.FC<ResultsSidebarProps> = ({ result }) => {
                  <div className="flex justify-between">
                   <span>Hoàn công</span>
                   <span className="font-mono">{formatCurrency(result.costAsbuilt)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Giấy phép xây dựng</span>
+                  <span className="font-mono">{formatCurrency(result.costPermit)}</span>
                 </div>
                 <div className="flex justify-between text-orange-400 font-medium">
                   <span>Dự phòng phí</span>

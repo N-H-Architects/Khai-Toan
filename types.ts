@@ -29,15 +29,18 @@ export interface CalculatorState {
   priceRough: number;
   priceFinish: number;
   pricePackage: number;
+  priceInteriorFinish: number;
   priceGarden: number;
 
   // Services
   percentSupervision: number;
   percentAsbuilt: number;
   percentContingency: number;
+  costPermit: number;
 
   // Design Fees (V5)
   priceDesignArch: number;
+  areaInteriorFinish: number;
   areaDesignInterior: number;
   priceDesignInterior: number;
   areaDesignLandscape: number;
@@ -47,10 +50,12 @@ export interface CalculatorState {
 export interface CalculationResult {
   details: Array<{ name: string; pct: number; area: number }>;
   totalConstructionArea: number;
+  areaInteriorFinish: number;
   
   // Costs Breakdown
   costRough: number;
   costFinish: number;
+  costInteriorFinish: number;
   costConstruction: number; // Sum of rough + finish
   costPile: number;
   costGarden: number;
@@ -61,11 +66,14 @@ export interface CalculationResult {
   costDesignArch: number;
   designArchRatio: number; // % of construction cost
   costDesignInterior: number;
+  designInteriorRatio: number;
   costDesignLandscape: number;
+  designLandscapeRatio: number;
   totalDesignCost: number;
 
   costSupervision: number;
   costAsbuilt: number;
+  costPermit: number;
   costContingency: number;
   
   grandTotal: number;

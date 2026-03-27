@@ -27,21 +27,24 @@ const INITIAL_STATE: CalculatorState = {
   foundationType: 100,
   roofType: 0,
   
-  priceRough: 3800000,
-  priceFinish: 2500000,
+  priceRough: 4400000,
+  priceFinish: 3600000,
   pricePackage: 0,
+  priceInteriorFinish: 0,
   priceGarden: 1500000,
   
   // Design Fees V5
-  priceDesignArch: 250000,
+  priceDesignArch: 200000,
+  areaInteriorFinish: 0,
   areaDesignInterior: 0,
-  priceDesignInterior: 0,
+  priceDesignInterior: 150000,
   areaDesignLandscape: 0,
-  priceDesignLandscape: 0,
+  priceDesignLandscape: 110000,
 
   percentSupervision: 0,
   percentAsbuilt: 0,
   percentContingency: 10,
+  costPermit: 0,
 };
 
 export const Calculator: React.FC = () => {
@@ -185,6 +188,8 @@ export const Calculator: React.FC = () => {
 
     const costConstruction = costRough + costFinish;
     
+    const costInteriorFinish = state.areaInteriorFinish * state.priceInteriorFinish;
+
     // Calculate total pile cost from 3 types
     const costPile = 
       (state.pile.concrete.length * state.pile.concrete.price) +
@@ -193,7 +198,7 @@ export const Calculator: React.FC = () => {
 
     const costGarden = state.garden.area * state.priceGarden;
 
-    const hardCost = costConstruction + costPile + costGarden;
+    const hardCost = costConstruction + costPile + costGarden + costInteriorFinish;
 
     // Design Fees
     // Architecture area = Total Construction Area - Foundation Cap Area
@@ -204,7 +209,11 @@ export const Calculator: React.FC = () => {
     const designArchRatio = costConstruction > 0 ? (costDesignArch / costConstruction) * 100 : 0;
 
     const costDesignInterior = state.areaDesignInterior * state.priceDesignInterior;
+    const designInteriorRatio = costConstruction > 0 ? (costDesignInterior / costConstruction) * 100 : 0;
+
     const costDesignLandscape = state.areaDesignLandscape * state.priceDesignLandscape;
+    const designLandscapeRatio = costConstruction > 0 ? (costDesignLandscape / costConstruction) * 100 : 0;
+
     const totalDesignCost = costDesignArch + costDesignInterior + costDesignLandscape;
 
     // Other Service Costs (Percent of House Construction Cost only)
@@ -217,8 +226,10 @@ export const Calculator: React.FC = () => {
     return {
       details,
       totalConstructionArea: totalArea,
+      areaInteriorFinish: state.areaInteriorFinish,
       costRough,
       costFinish,
+      costInteriorFinish,
       costConstruction,
       costPile,
       costGarden,
@@ -226,12 +237,15 @@ export const Calculator: React.FC = () => {
       costDesignArch,
       designArchRatio,
       costDesignInterior,
+      designInteriorRatio,
       costDesignLandscape,
+      designLandscapeRatio,
       totalDesignCost,
       costSupervision,
       costAsbuilt,
+      costPermit: state.costPermit,
       costContingency,
-      grandTotal: hardCost + totalDesignCost + costSupervision + costAsbuilt + costContingency,
+      grandTotal: hardCost + totalDesignCost + costSupervision + costAsbuilt + state.costPermit + costContingency,
       usePackagePrice
     };
   }, [state]);
@@ -422,19 +436,32 @@ export const Calculator: React.FC = () => {
               </div>
 
               <div className="md:col-span-2 border-t pt-4">
-                <label className="block text-sm font-bold text-gray-800 mb-1">4. Hình thức mái</label>
-                <p className="text-xs text-gray-500 mb-2 italic">Lưu ý: Hệ số % dưới đây sẽ áp dụng cho diện tích sàn mái tương ứng.</p>
-                <select 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-yellow-50 font-medium"
-                  value={state.roofType}
-                  onChange={(e) => handleRoofTypeChange(parseInt(e.target.value))}
-                >
-                  <option value="0">-- Chọn hình thức mái để áp hệ số --</option>
-                  <option value="30">Mái tôn (30%)</option>
-                  <option value="50">Mái bằng bê tông cốt thép (50%)</option>
-                  <option value="70">Mái ngói vì kèo (70%)</option>
-                  <option value="100">Mái bê tông cốt thép dán ngói (100%)</option>
-                </select>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-800 mb-1">4. Hình thức mái</label>
+                    <select 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-yellow-50 font-medium"
+                      value={state.roofType}
+                      onChange={(e) => handleRoofTypeChange(parseInt(e.target.value))}
+                    >
+                      <option value="0">-- Chọn hình thức mái --</option>
+                      <option value="30">Mái tôn (30%)</option>
+                      <option value="50">Mái bằng bê tông cốt thép (50%)</option>
+                      <option value="70">Mái ngói vì kèo (70%)</option>
+                      <option value="100">Mái bê tông cốt thép dán ngói (100%)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-800 mb-1">Tự áp hệ số (%)</label>
+                    <NumberInput 
+                      value={state.roof.coef} 
+                      onValueChange={(v) => updateNested('roof', 'coef', v)} 
+                      suffix="%" 
+                      className="bg-white"
+                    />
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 mt-2 italic">Lưu ý: Hệ số % sẽ áp dụng cho diện tích sàn mái tương ứng.</p>
               </div>
            </div>
         </Card>
@@ -450,8 +477,14 @@ export const Calculator: React.FC = () => {
                   <InputGroup label="1. Đơn giá Phần thô + NC Hoàn thiện" className="!mb-3" labelClassName="text-blue-700">
                     <NumberInput value={state.priceRough} onValueChange={(v) => updateState('priceRough', v)} suffix="đ/m²" />
                   </InputGroup>
-                  <InputGroup label="2. Đơn giá Hoàn thiện (Vật tư)" className="!mb-0" labelClassName="text-green-700">
+                  <InputGroup label="2. Đơn giá Hoàn thiện (Vật tư)" className="!mb-3" labelClassName="text-green-700">
                     <NumberInput value={state.priceFinish} onValueChange={(v) => updateState('priceFinish', v)} suffix="đ/m²" />
+                  </InputGroup>
+                  <InputGroup label="3. Đơn giá Hoàn thiện Nội thất" className="!mb-0" labelClassName="text-orange-700">
+                    <div className="flex gap-2">
+                      <NumberInput value={state.areaInteriorFinish} onValueChange={(v) => updateState('areaInteriorFinish', v)} placeholder="DT (m²)" suffix="m²" />
+                      <NumberInput value={state.priceInteriorFinish} onValueChange={(v) => updateState('priceInteriorFinish', v)} placeholder="Giá/m²" suffix="đ/m²" />
+                    </div>
                   </InputGroup>
                </div>
               
@@ -464,8 +497,8 @@ export const Calculator: React.FC = () => {
                 </div>
               </div>
 
-               <InputGroup label="Đơn giá Trọn gói (Gộp 2 mục trên)">
-                <NumberInput value={state.pricePackage} onValueChange={(v) => updateState('pricePackage', v)} placeholder="Ví dụ: 6300000" suffix="đ/m²" />
+               <InputGroup label="Đơn giá Trọn gói (Gộp mục 1 & 2)">
+                <NumberInput value={state.pricePackage} onValueChange={(v) => updateState('pricePackage', v)} placeholder="Ví dụ: 8.000.000" suffix="đ/m²" />
               </InputGroup>
 
               <InputGroup label="Đơn giá Sân vườn">
@@ -485,6 +518,10 @@ export const Calculator: React.FC = () => {
                  <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Phí hoàn công</span>
                     <NumberInput value={state.percentAsbuilt} onValueChange={(v) => updateState('percentAsbuilt', v)} className="max-w-[80px]" suffix="%" />
+                 </div>
+                 <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Giấy phép xây dựng</span>
+                    <NumberInput value={state.costPermit} onValueChange={(v) => updateState('costPermit', v)} className="max-w-[120px]" suffix="đ" />
                  </div>
                  <div className="flex justify-between items-center pt-2 border-t border-gray-200">
                     <div className="flex flex-col">

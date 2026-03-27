@@ -14,7 +14,7 @@ export const ResultsSidebar: React.FC<ResultsSidebarProps> = ({ result }) => {
   return (
     <div className="bg-slate-800 text-white rounded-xl shadow-xl overflow-hidden sticky top-6">
       <div className="px-6 py-4 border-b border-slate-700 flex justify-between items-center bg-slate-900/50">
-        <h3 className="font-bold uppercase tracking-wider text-sm">Báo Cáo Dự Toán</h3>
+        <h3 className="font-bold uppercase tracking-wider text-sm">Báo Cáo Khái Toán</h3>
         <button 
           onClick={() => window.print()}
           className="text-slate-400 hover:text-white transition-colors"
@@ -167,7 +167,7 @@ export const ResultsSidebar: React.FC<ResultsSidebarProps> = ({ result }) => {
             </div>
             
             <p className="text-[10px] text-center text-slate-500 mt-4 italic">
-              (*) Số liệu chỉ mang tính chất khái toán tham khảo. Vui lòng liên hệ trực tiếp để có dự toán chi tiết.
+              Lưu ý: Toàn bộ số liệu hiện tại chỉ mang tính khái toán tham khảo. Chi phí chính xác sẽ được lập dựa trên hồ sơ thiết kế kỹ thuật hoàn chỉnh.
             </p>
           </>
         )}

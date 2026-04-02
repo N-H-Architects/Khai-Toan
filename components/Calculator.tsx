@@ -23,6 +23,8 @@ const INITIAL_STATE: CalculatorState = {
     bored: { length: 0, price: 0 },
     bamboo: { quantity: 0, price: 0 },
   },
+  fenceFront: { length: 0, price: 5000000 },
+  fenceRear: { length: 0, price: 2500000 },
   foundationCap: { coef: 30 },
   foundationType: 100,
   roofType: 0,
@@ -197,8 +199,11 @@ export const Calculator: React.FC = () => {
       (state.pile.bamboo.quantity * state.pile.bamboo.price);
 
     const costGarden = state.garden.area * state.priceGarden;
+    const costFenceFront = state.fenceFront.length * state.fenceFront.price;
+    const costFenceRear = state.fenceRear.length * state.fenceRear.price;
+    const costFence = costFenceFront + costFenceRear;
 
-    const hardCost = costConstruction + costPile + costGarden + costInteriorFinish;
+    const hardCost = costConstruction + costPile + costGarden + costFence + costInteriorFinish;
 
     // Design Fees
     // Architecture area = Total Construction Area - Foundation Cap Area
@@ -233,6 +238,9 @@ export const Calculator: React.FC = () => {
       costConstruction,
       costPile,
       costGarden,
+      costFenceFront,
+      costFenceRear,
+      costFence,
       hardCost,
       costDesignArch,
       designArchRatio,
@@ -411,6 +419,61 @@ export const Calculator: React.FC = () => {
                             onValueChange={(v) => updatePile('bamboo', 'price', v)} 
                             placeholder="Đơn giá (VNĐ/Cây)" 
                             className="h-9"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {/* Fence Section */}
+            <div className="col-span-1 md:col-span-2 bg-emerald-50 p-4 rounded-lg border border-emerald-100 mb-6">
+                <label className="block text-sm font-bold text-emerald-800 mb-3 uppercase">Chi phí Hàng rào</label>
+                
+                {/* Front Fence */}
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-4 items-start sm:items-end">
+                    <div className="w-full sm:w-1/3">
+                        <label className="text-xs font-bold text-gray-700 mb-1 block">1. Hàng rào mặt tiền (md)</label>
+                    </div>
+                    <div className="w-full sm:w-1/3">
+                        <NumberInput 
+                            value={state.fenceFront.length} 
+                            onValueChange={(v) => updateNested('fenceFront', 'length', v)} 
+                            placeholder="Chiều dài (md)" 
+                            className="h-9"
+                            suffix="md"
+                        />
+                    </div>
+                    <div className="w-full sm:w-1/3">
+                        <NumberInput 
+                            value={state.fenceFront.price} 
+                            onValueChange={(v) => updateNested('fenceFront', 'price', v)} 
+                            placeholder="Đơn giá (VNĐ/md)" 
+                            className="h-9"
+                            suffix="đ/md"
+                        />
+                    </div>
+                </div>
+
+                {/* Rear Fence */}
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-end">
+                    <div className="w-full sm:w-1/3">
+                        <label className="text-xs font-bold text-gray-700 mb-1 block">2. Hàng rào 3 mặt sau (md)</label>
+                    </div>
+                    <div className="w-full sm:w-1/3">
+                        <NumberInput 
+                            value={state.fenceRear.length} 
+                            onValueChange={(v) => updateNested('fenceRear', 'length', v)} 
+                            placeholder="Chiều dài (md)" 
+                            className="h-9"
+                            suffix="md"
+                        />
+                    </div>
+                    <div className="w-full sm:w-1/3">
+                        <NumberInput 
+                            value={state.fenceRear.price} 
+                            onValueChange={(v) => updateNested('fenceRear', 'price', v)} 
+                            placeholder="Đơn giá (VNĐ/md)" 
+                            className="h-9"
+                            suffix="đ/md"
                         />
                     </div>
                 </div>

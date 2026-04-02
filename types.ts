@@ -21,6 +21,8 @@ export interface CalculatorState {
     bored: { length: number; price: number };
     bamboo: { quantity: number; price: number };
   };
+  fenceFront: { length: number; price: number };
+  fenceRear: { length: number; price: number };
   foundationCap: { coef: number };
   foundationType: number; // For selection state only
   roofType: number; // For selection state only
@@ -59,8 +61,11 @@ export interface CalculationResult {
   costConstruction: number; // Sum of rough + finish
   costPile: number;
   costGarden: number;
+  costFenceFront: number;
+  costFenceRear: number;
+  costFence: number; // Total fence cost
   
-  hardCost: number; // Construction + Pile + Garden
+  hardCost: number; // Construction + Pile + Garden + Fence
   
   // Services
   costDesignArch: number;

@@ -83,10 +83,23 @@ export const ResultsSidebar: React.FC<ResultsSidebarProps> = ({ result }) => {
                   <span className="font-mono">{formatCurrency(result.costGarden)}</span>
                 </div>
 
-                {/* Row E: Interior Finish */}
+                {/* Row E: Fence */}
                 <div className="flex justify-between text-slate-300">
                   <div className="flex flex-col">
-                    <span>e. Hoàn thiện Nội thất</span>
+                    <span>e. Chi phí Hàng rào</span>
+                    {(result.costFenceFront > 0 || result.costFenceRear > 0) && (
+                      <span className="text-[10px] text-slate-500 italic">
+                        (MT: {formatCurrency(result.costFenceFront)} - Sau: {formatCurrency(result.costFenceRear)})
+                      </span>
+                    )}
+                  </div>
+                  <span className="font-mono">{formatCurrency(result.costFence)}</span>
+                </div>
+
+                {/* Row F: Interior Finish */}
+                <div className="flex justify-between text-slate-300">
+                  <div className="flex flex-col">
+                    <span>f. Hoàn thiện Nội thất</span>
                     {result.costInteriorFinish > 0 && (
                       <span className="text-[10px] text-slate-500 italic">(Diện tích: {result.areaInteriorFinish} m²)</span>
                     )}

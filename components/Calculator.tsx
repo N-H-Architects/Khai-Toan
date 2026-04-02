@@ -131,6 +131,19 @@ export const Calculator: React.FC = () => {
     }
   };
 
+  // Auto-calculate Interior Finish Area & Design Area
+  useEffect(() => {
+    const floorsArea = state.floors.reduce((sum, f) => sum + f.area, 0);
+    const suggestedArea = floorsArea + state.mezzanine.area + state.terraceIn.area + state.basement.area;
+    
+    if (suggestedArea !== state.areaInteriorFinish) {
+      updateState('areaInteriorFinish', suggestedArea);
+    }
+    if (suggestedArea !== state.areaDesignInterior) {
+      updateState('areaDesignInterior', suggestedArea);
+    }
+  }, [state.floors, state.mezzanine.area, state.terraceIn.area, state.basement.area]);
+
   // --- Calculation Logic ---
   const result: CalculationResult = useMemo(() => {
     let totalArea = 0;
